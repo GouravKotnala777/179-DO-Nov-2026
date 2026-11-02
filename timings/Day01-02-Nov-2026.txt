@@ -1,6 +1,71 @@
 # What I did today
+
+# time stamps
 10:00 - 13:20 => watched today mornings lecture on youtube.
 13:30 - 15:00 => use all File and Directory Management commands and File Viewing and Editing commands in wsl.
 15:20 - 16:50 => created EC2 instance on AWS and connected remote server terminal to CMD after getting multiple errors.
 17:10 - 17:30 => created repo 179-DO-Nov-2026 using linux (took time to remember command for creating nested folder).
+17:30 - 18:20 => practice for evening session introduction.
+18:20 - 18:28 => pushed first commit to the gihub using CMD connected with AWS EC2 remote server terminal.
+18:50 - 19:30 => learn about yaml extension.
+19:30 - 19:50 => joined evening introduction session.
+20:00 - 20:35 => learnd about how to install a module on remote EC2 remote server using Ansible.
 
+# some codes and commands
+    - File and Directory Management
+    ls      =>  to see the list of all files and directories
+    ls -1   =>  to see list vertically
+    ls -l   =>  list with permissions, times and few more details
+    ls -a   =>  list including hidden files and folders
+    
+    pwd     =>  to show present working directory
+
+    cd      =>  to change working directory
+
+    mkdir   =>  to create new directory
+    mkdir -p folder1/folder2   =>  to create nested folders
+    mkdir -p "filder1/folder2/"{"sibling1","sibling2"}
+    mkdir -p "documents/179-DO-Nov-2026/"{"timings","coding practice"}
+	result :- documents/
+		  └── 179-DO-Nov-2026/
+    		      ├── timings/
+    		      └── coding practice/
+
+
+    touch   =>  to create new file
+
+    mv      =>  to rename if source destination are same and otherwise moving files/directories
+
+    rm      =>  to remove files and directories
+
+
+    - File Viewing and Editing
+    cat     =>   to see the content of a file
+
+    head    =>   to see top 10 lines of a file
+
+    tail    =>   to see bottom 10 lines of a file
+
+    less    =>   to see the lines of a file dynamically
+
+    vim     =>   to edit a file
+
+
+
+
+    - to connect CMD to EC2 remote server terminal
+    ssh -i "KEY_VALUE_FILE_PATH" USERNAME@EC2_PUBLIC_DNS
+
+
+
+    
+    - Install nginx on EC2 remote server using Ansible
+    - name : Install nginx on EC2 server
+      hosts : all
+      become : yes
+      tasks :
+	- name : Install nginx
+	yum :
+	  name : nginx
+	  state : present
+    
