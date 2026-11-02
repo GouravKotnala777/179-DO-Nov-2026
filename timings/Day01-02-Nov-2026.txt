@@ -12,7 +12,7 @@
 20:00 - 20:35 => learnd about how to install a module on remote EC2 remote server using Ansible.
 
 # some codes and commands
-    - File and Directory Management
+    -> File and Directory Management
     ls      =>  to see the list of all files and directories
     ls -1   =>  to see list vertically
     ls -l   =>  list with permissions, times and few more details
@@ -39,7 +39,7 @@
     rm      =>  to remove files and directories
 
 
-    - File Viewing and Editing
+    -> File Viewing and Editing
     cat     =>   to see the content of a file
 
     head    =>   to see top 10 lines of a file
@@ -53,19 +53,19 @@
 
 
 
-    - to connect CMD to EC2 remote server terminal
+    -> to connect CMD to EC2 remote server terminal
     ssh -i "KEY_VALUE_FILE_PATH" USERNAME@EC2_PUBLIC_DNS
 
 
 
     
-    - Install nginx on EC2 remote server using Ansible
+    -> Install nginx on EC2 remote server using Ansible
     - name : Install nginx on EC2 server
       hosts : all
       become : yes
       tasks :
-	- name : Install nginx
-	yum :
-	  name : nginx
-	  state : present
+		- name : Install nginx
+		yum :
+		  name : nginx
+		  state : present
     
