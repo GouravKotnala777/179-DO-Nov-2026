@@ -9,57 +9,69 @@
 19:00 - 19:30 => joined eveing session.
 19:20 - 19:40 => learned command to start module on EC2 remote server using Ansible.
 19:50 - 20:40 => learned the another way to authenticate.
-21:30 - 23:10 => learned about how to edit two files simultaneously  
+21:30 - 23:10 => learned about how to edit two files simultaneously.
+23:10 - 23:30 => fixed today's log file mistake caused by editing two files simultaneously.
 
 # some codes and commands
-    - File and Directory Management
-    ls      =>  to see the list of all files and directories
-    ls -1   =>  to see list vertically
-    ls -l   =>  list with permissions, times and few more details
-    ls -a   =>  list including hidden files and folders
+
+  - System and OS Information
+
+    uname -a       =>  to display complete system and kernel information
+    uname -r       =>  to display the Linux kernel version
+    hostname       =>  to display the system hostname
+    hostnamectl    =>  to display hostname, operating system and system details
+    cat /etc/os-release =>  to display Linux distribution and version
+    uptime         =>  to show how long the system has been running
+
+  - CPU Information
+
+    lscpu          =>  to display CPU architecture, cores and other CPU details
+    nproc          =>  to show the number of available processing units
+    cat /proc/cpuinfo =>  to display detailed CPU information
+
+  - RAM and Memory Information
+
+    free -h        =>  to display RAM and swap memory usage in human-readable format
+    cat /proc/meminfo =>  to display detailed memory information
+    vmstat         =>  to display memory, CPU and process statistics
+
+  - Disk and Storage Information
+
+    df -h          =>  to display disk space usage in human-readable format
+    du -sh         =>  to display the total size of the current directory
+    du -sh *       =>  to display the size of each item in the current directory
+    lsblk          =>  to list storage devices and partitions
+    sudo fdisk -l  =>  to display disk partition information
+
+  - Network Information
+
+    ip addr        =>  to display network interfaces and IP addresses
+    ip route       =>  to display the network routing table
+    hostname -I    =>  to display the system's IP addresses
+    ss -tuln       =>  to display listening TCP and UDP ports
+    ping google.com =>  to test network connectivity
+
+  - Process and Resource Monitoring
+
+    top            =>  to monitor running processes and system resource usage
+    ps aux         =>  to list running processes
+    pgrep -a node  =>  to find processes by name and display their commands
+    whoami         =>  to display the current username
+    who            =>  to show currently logged-in users
+
+  - Additional Commands
+
+    lspci          =>  to list PCI devices
+    lsusb          =>  to list connected USB devices
+    netstat -tuln  =>  to display listening TCP and UDP ports (requires net-tools)
+    curl -I URL    =>  to display HTTP response headers from a URL
+    wget URL       =>  to download a file from a URL
+    ssh user@host  =>  to connect securely to a remote server
+
+
+
     
-    pwd     =>  to show present working directory
-
-    cd      =>  to change working directory
-
-    mkdir   =>  to create new directory
-    mkdir -p folder1/folder2   =>  to create nested folders
-    mkdir -p "filder1/folder2/"{"sibling1","sibling2"}
-    mkdir -p "documents/179-DO-Nov-2026/"{"timings","coding practice"}
-	result :- documents/
-		  └── 179-DO-Nov-2026/
-    		      ├── timings/
-    		      └── coding practice/
-
-
-    touch   =>  to create new file
-
-    mv      =>  to rename if source destination are same and otherwise moving files/directories
-
-    rm      =>  to remove files and directories
-
-
-    - File Viewing and Editing
-    cat     =>   to see the content of a file
-
-    head    =>   to see top 10 lines of a file
-
-    tail    =>   to see bottom 10 lines of a file
-
-    less    =>   to see the lines of a file dynamically
-
-    vim     =>   to edit a file
-
-
-
-
-    - to connect CMD to EC2 remote server terminal
-    ssh -i "KEY_VALUE_FILE_PATH" USERNAME@EC2_PUBLIC_DNS
-
-
-
-    
-    - Install nginx on EC2 remote server using Ansible
+    - Install and Start nginx on EC2 remote server using Ansible
       - name : Install nginx on EC2 server
         hosts : all
         become : yes
@@ -68,6 +80,22 @@
 	  yum :
 	    name : nginx
 	    state : present
-   
+   	  - name : Install nginx
+	  service :
+	    name : nginx
+	    state : started
+	    enabled : yes
+
+
     - to edit two files simultaneously
       vim -O file1 file2
+
+
+
+
+
+# What I will do tomorrow
+
+# learn about crone-jobs
+# learn about some of other linux commands
+# english speaking practice
