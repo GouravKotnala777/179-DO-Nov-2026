@@ -1,1 +1,56 @@
-Today I will do
+# What I did today
+
+# time stamps
+08:10 - 09:20 => joined today's mornings session.
+10:15 - 12:50 => watched today mornings lecture on youtube.
+13:20 - 16:30 => explored and practiced advanced linux from today's lecture.
+17:40 - 18:15 => practiced rm, shred, sed, awk and some of more.
+18:20 - 19:00 => make today's log and from morning session and practiced for evening session.
+19:30 - 20:00 => joined eveing session.
+20:00 - 20:30 => practiced command to install and start Apache service using Ansible.
+20:30 - 21:20 => practice english speaking.
+21:30 - 22:40 => revise linux commands.
+22:50 - 23:20 => watched a video about what is Ansible.
+
+# some codes and commands
+
+    - Install and Start Apache service using Ansible
+      - name : Install Apache and Install
+        hosts : all
+        become : yes
+        tasks :
+      	  - name : Install Apache
+          	  yum :
+          	    name : httpd
+          	    state : present
+        	- name : Start Apache
+        	    name : httpd
+        	    state : started
+        	    enabled : yes
+
+
+
+      - Docker File for Nginx web server
+      FROM nginx:latest
+      COPY index.html /user/share/nginx/html/index.html
+      
+      - HTML
+      <h1>Hello Gourav</h1>
+      
+      - Bash
+      - Real Path
+      /user/share/nginx/html/index.html
+      
+      - Bash
+      docker build -t gourav-nginx .
+      docker run -d -p 80:80 gourav-nginx
+
+
+
+
+
+# What I will do tomorrow
+
+# explore git more 
+# english speaking practice
+# learn more about docker
