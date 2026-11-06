@@ -1,3 +1,51 @@
 # What I did today
-# What I did today from docs-tommorrow branch
 
+# time stamps
+07:10 - 09:20 => joined today's mornings session.
+10:15 - 12:30 => watched today mornings lecture on youtube.
+13:00 - 16:50 => explored and practiced all GIT concepts and commands from today's lecture.
+17:40 - 19:00 => practiced merge, rebase, charry-pick, resolve conflict by command.
+18:00 - 19:00 => make today's log and from morning session and practiced for evening session.
+19:30 - 20:00 => joined eveing session.
+20:00 - 20:30 => practiced command to install and start module on EC2 remote server using Ansible.
+20:30 - 21:20 => practice english speaking.
+21:30 - 22:40 => revise linux commands.
+22:50 - 23:20 => watched a video about what is docker.
+
+# some codes and commands
+
+    - Install and Start nginx on EC2 remote server using Ansible
+      - name : Install nginx on EC2 server
+        hosts : all
+        become : yes
+        tasks :
+	  - name : Install nginx
+	  yum :
+	    name : nginx
+	    state : present
+   	  - name : Install nginx
+	  service :
+	    name : nginx
+	    state : started
+	    enabled : yes
+
+  # docker Images and Containers
+  docker pull ubuntu
+  docker images
+  docker ps -a
+  
+  # docker File
+  FROM ubuntu:22.04
+  RUN apt update
+  CMD ["echo", "Hello Gourav"]
+
+
+
+
+
+# What I will do tomorrow
+
+# learn about AWS and EC2 on web
+# learn about other services that i don't know yet 
+# english speaking practice
+# learn more about docker
