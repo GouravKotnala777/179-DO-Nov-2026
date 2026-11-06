@@ -1,1 +1,52 @@
+# What I did today
 
+# time stamps
+07:15 - 08:00 => joined today's mornings session.
+10:20 - 14:20 => watched today mornings lecture on youtube.
+14:30 - 18:10 => explored and practiced all EWS services, concepts and commands from today's lecture.
+18:20 - 18:40 => practiced some advance git commands.
+18:55 - 19:00 => make today's log and from morning session and practiced for evening session.
+19:30 - 20:00 => joined eveing session.
+20:00 - 20:15 => practiced command to install and start Apache using Ansible.
+20:15 - 21:20 => practice english speaking.
+21:20 - 22:40 => revise linux commands.
+22:40 - 23:20 => watched a video about how to sync hand movements with sentances.
+
+# some codes and commands
+
+    - Install and Start Apache using Ansible
+      - name : Install Apache and Start
+        hosts : all
+        become : yes
+        tasks :
+	  - name : Install Apache
+	    yum :
+	      name : httpd
+	      state : present
+	  - name : Start Apache
+	    service :
+	      name : httpd
+	      state : started
+	      enabled : yes
+
+  # docker Images and Containers
+  docker pull ubuntu
+  docker images
+  docker ps -a
+  
+  # docker File
+  FROM ubuntu:22.04
+  RUN apt update
+  CMD ["echo", "Hello Gourav"]
+
+
+
+
+
+# What I will do tomorrow
+
+# learn about other services of AWS that I don't know yet
+# practice hand practice
+# practice aws from today again
+# english speaking practice
+# learn more about docker
