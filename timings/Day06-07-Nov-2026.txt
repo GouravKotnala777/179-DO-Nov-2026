@@ -1,0 +1,53 @@
+# What I did today
+
+# time stamps
+07:35 - 08:50 => joined today's mornings session.
+10:40 - 13:41 => watched today mornings lecture on youtube.
+13:50 - 17:40 => explored and practiced all EWS services, concepts and commands from today's lecture.
+18:00 - 18:40 => revised some networking concepts.
+18:55 - 19:20 => make today's log and from morning session and practiced for evening session.
+20:00 - 20:15 => practiced command to install and start Apache using Ansible.
+20:15 - 21:20 => practice english speaking.
+21:20 -  => .
+
+# some codes and commands
+
+    - Install and Start Docker using Ansible
+      - name : Install and Start Docker
+        hosts : all
+        become : yes
+        tasks :
+      	  - name : Install Docker
+      	    yum :
+      	      name : docker
+      	      state : present
+      	  - name : Start Docker
+      	    service :
+      	      name : docker
+      	      state : started
+      	      enabled : yes
+
+ 
+# Node.js application (javaScript)
+console.log("Hello Gourav");
+
+# Docker File
+FROM node:18
+WORKDIR /opt/gourav/node-app
+COPY app.js /opt/gourav/node-app/
+CMD ["node", "/opt/gourav/node-app/app.js"]
+
+# Real Path
+/opt/gourav/node-app
+
+
+
+
+
+# What I will do tomorrow
+
+# learn about other services of AWS that I don't know yet
+# practice aws from today again
+# checkout AWS website again
+# english speaking practice
+# learn more about docker
