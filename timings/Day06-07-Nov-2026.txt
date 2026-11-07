@@ -8,7 +8,7 @@
 18:55 - 19:20 => make today's log and from morning session and practiced for evening session.
 20:00 - 20:15 => practiced command to install and start Apache using Ansible.
 20:15 - 21:20 => practice english speaking.
-21:20 -  => .
+21:20 - 23:02 => explored and practiced all EWS services, concepts and commands from today's lecture.
 
 # some codes and commands
 
