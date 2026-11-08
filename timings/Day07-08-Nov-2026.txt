@@ -1,0 +1,23 @@
+# What I did today
+
+# time stamps
+07:00 - 08:30 => joined today's mornings session.
+10:00 - 11:00 => watched today mornings lecture on youtube.
+11:00 - 13:50 => explored and practiced all EWS services, concepts and commands from today's lecture.
+15:00 - 15:40 => revised some linux commands.
+19:10 - 19:50 => practice english speaking.
+20:00 - 22:00 => explored and practiced all EWS services, concepts and commands from today's lecture and pushed today's log on GitHub.
+
+# some codes and commands
+# Not practiced
+
+
+
+
+
+# What I will do tomorrow
+
+# learn about other services of AWS that I don't know yet
+# practice aws from today again
+# checkout AWS website again
+# english speaking practice
