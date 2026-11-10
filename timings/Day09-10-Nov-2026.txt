@@ -1,0 +1,26 @@
+# What I did today
+
+# time stamps
+07:15 - 08:30 => joined today's morning session.
+10:10 - 13:00 => watched today's session on youtube.
+13:20 - 15:40 => explored and practiced EWS services, concepts and commands from previous lectures.
+16:00 - 16:20 => revised some linux commands.
+16:20 - 19:00 => try to deploy my ecommerce website on EC2 with Docker (but not completed).
+20:20 - 20:25 => made log from today's morning session.
+20:25 - 20:30 => joined today's evening session.
+20:50 - 22:00 => try to complete project deployment with Docker on EC2 (not completed yet, error again and again).
+
+# some codes and commands
+# Not practiced
+
+
+
+
+
+# What I will do tomorrow
+
+# complete incomplete task (project + Docker + EC2).
+# learn about other services of AWS that I don't know yet
+# practice aws from today's session again
+# checkout AWS website again
+# english speaking practice
