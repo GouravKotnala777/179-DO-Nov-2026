@@ -10,7 +10,8 @@
 19:30 - 20:00 => made log from today's morning session.
 20:00 - 20:30 => joined today's evening session.
 20:50 - 22:00 => try to complete project deployment with Docker on EC2 (not completed yet, error again and again).
-22:00 - 23:10 => practice english speaking with ChatGPT.
+22:00 - 22:25 => practice english speaking with ChatGPT.
+22:25 - 23:31 => watched previous batch git session video.
 
 # some codes and commands
 # docker run -it hello-world
