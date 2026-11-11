@@ -1,0 +1,31 @@
+# What I did today
+
+# time stamps
+07:10 - 11:30 => watched yesterday's Docker session video again.
+11:50 - 14:30 => watched today's session on youtube.
+15:00 - 16:00 => learned more about Kubernates from ChatGPT.
+16:00 - 16:40 => made introduction paragraph.
+17:00 - 18:00 => practice introduction.
+18:00 - 19:00 => try to deploy my ecommerce website on EC2 with Docker (but not completed).
+19:30 - 20:00 => made log from today's morning session.
+20:00 - 20:30 => joined today's evening session.
+20:50 - 22:00 => try to complete project deployment with Docker on EC2 (not completed yet, error again and again).
+22:00 - 23:10 => practice english speaking with ChatGPT.
+
+# some codes and commands
+# docker run -it hello-world
+# docker pull hello-world
+# docker images
+# docker 
+# docker start hello-image
+# docker stop hello-image
+
+
+
+
+
+# What I will do tomorrow
+
+# complete incomplete task (project + Docker + EC2).
+# practice aws from today's session again
+# english speaking practice
