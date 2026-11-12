@@ -9,8 +9,34 @@
 19:30 - 20:00 => joined today's evening session.
 20:00 - 21:05 => learned connecting EKS cluster from EC2 terminal using aws configure and used/explored Security Groups, IAM Role, Policies, Permissions.
 22:00 - 22:30 => practice english speaking with ChatGPT.
+22:50 - 23:30 => practiced some Ansible and Docker code.
 
 # some codes and commands
+  - name : Setup Auto Scaling Group
+    hosts : all
+    become : yes
+    tasks :
+      - name : Create Launch Configuration
+        ec2_asg :
+          name : gourav-asg
+          region : ap-south-1
+          launch_config_name : gourav-launch-config
+          min_size : 1
+          max_size : 3
+          desired_capacity : 2
+          vpc_zone_identifier : subnet-123123123
+
+
+  Docker Volumes
+    FROM ubuntu
+    VOLUME ["/opt/gourav/data"]
+    CMD ["sleep", "1000"]
+
+  Real Path
+    /opt/gourav/data
+
+  Bash Command
+    docker volume create gourav-volume
 
 
 
