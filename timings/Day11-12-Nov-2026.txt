@@ -1,0 +1,24 @@
+# What I did today
+
+# time stamps
+07:15 - 08:30 => joined today's session.
+10:30 - 14:00 => watched today's session on youtube.
+14:20 - 16:50 => watched previous months session on youtube.
+17:00 - 18:20 => practice Docker and Dockerfile code code.
+18:40 - 19:30 => made log from today's morning session.
+19:30 - 20:00 => joined today's evening session.
+20:00 - 21:05 => learned connecting EKS cluster from EC2 terminal using aws configure and used/explored Security Groups, IAM Role, Policies, Permissions.
+22:00 - 22:30 => practice english speaking with ChatGPT.
+
+# some codes and commands
+
+
+
+
+
+# What I will do tomorrow
+
+# learn more about EKS
+# practice aws from today's session again
+# english speaking practice
+# try to use docker with my application (for sure if tommorrow's session is going to be easy).
