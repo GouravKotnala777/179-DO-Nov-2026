@@ -1,0 +1,45 @@
+# What I did today
+
+# time stamps
+07:30 - 08:30 => joined today's morning session.
+10:10 - 13:40 => watched today's session on youtube.
+14:00 - 16:50 => practice EC2, EKS, EKS Cluster connection using linux terminal.
+17:00 - 18:00 => practice english speaking.
+18:00 - 19:00 => made log from today's morning session.
+19:30 - 20:00 => joined today's evening session.
+20:00 - 23:25 => watched EC2 to GitHub video.
+23:25 - 23:45 => add GitHub contribution details.
+
+# some codes and commands
+  - name : Setup Nginx on multiple Nodes
+    hosts : all
+    become : yes
+    tasks :
+      - name : Install Nginx
+        yum :
+          name : nginx
+          state : present
+  
+      - name : Start Nginx service
+        service :
+          name : nginx
+          state : started
+          enabled : yes
+
+
+  Docker Volumes
+    FROM ubuntu
+    COPY gourav-file.txt /opt/gourav/files/
+    ADD gourav.tar.gz /opt/gourav/extracted/
+
+
+
+
+
+# What I will do tomorrow
+
+# learn more about EKS
+# How to use Terraform to create EKS Cluster
+# practice aws from today's session again
+# english speaking practice
+# try to use docker with my application (for sure if tommorrow's session is going to be easy).
