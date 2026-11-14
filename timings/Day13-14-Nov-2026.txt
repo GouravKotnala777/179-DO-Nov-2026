@@ -1,0 +1,16 @@
+# What I did today
+# 3 hours - watched today's morning session video
+# 1 hour - git PR video
+# 1 hour - english speaking practice with ChatGPT
+# 1 hour - interview practice
+# 1 hour - practice for eveing session
+# 30 min - joined evening session
+# 2 hours - explored terraform files
+# 1 hours 20 min - watched kubernetes videos and learned some concepts
+
+## Tomorrow's Task
+# 1 hour - practice introduction
+# 1 hour - practice english speaking
+# 2 hour - learne more about kubernetes
+# 2 hour and half min - learne more about terraform
+# 1 hour and half min - explore aws
