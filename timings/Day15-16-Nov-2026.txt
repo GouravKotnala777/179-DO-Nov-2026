@@ -1,0 +1,23 @@
+# What I did today
+# 1 and half hour - joined today's morning session
+# 2 hour - watched today's morning session video
+# 1 hour and 30 min - practiced introduction
+# 1 hours 50 min - explored AWS console and created services
+# 40 min - to make introduction video
+# 1 hour and 20 min - english speaking practice with ChatGPT
+# 30 min - made learning lesson log for evening session
+# 30 min - practice for evening session
+# 30 min - joined evening session
+# 50 min - explored Docker
+# 1 hour - learn more about Terraform
+
+
+
+
+
+## Tomorrow's Task
+# 1 hour - practice introduction
+# 1 hour - practice english speaking
+# 1 hour - learn more about kubernetes
+# 2 hour - learn more about terraform
+# 2 hour and half min - explore Docker
