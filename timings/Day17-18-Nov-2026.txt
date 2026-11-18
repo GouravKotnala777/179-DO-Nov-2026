@@ -1,0 +1,24 @@
+# What I did today
+# 1 hour and 30 min - joined today's morning session
+# 2 hours - watched today's morning session video
+# 1 hour - practiced introduction
+# 1 hours 20 min - explored Docker and learned some image and containers related commands
+# 30 min - to make introduction video
+# 1 hour - english speaking practice with ChatGPT
+# 50 min - made learning lesson log for evening session
+# 50 min - practice for evening session
+# 30 min - joined evening session
+# 3 hour - learn and revise about Kubernetes commands/concepts/terms
+# 30 min - learn more about Terraform
+
+
+
+
+
+## Tomorrow's Task
+# 1 hour - practice introduction
+# 1 hour - practice english speaking
+# as much as possible - learn more about kubernetes
+# 1 hour - learn more about terraform
+# 1 hour - explore Dockerfile concepts/commands
+# 1 hour - revise linux commands and interview questions
