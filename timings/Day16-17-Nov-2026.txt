@@ -1,0 +1,23 @@
+# What I did today
+# 3 hour - watched today's morning session video
+# 1 hour - practiced introduction
+# 3 hours 50 min - explored Docker and containerized MERN ecommerce project and deployed using EC2
+# 40 min - to make introduction video
+# 1 hour - english speaking practice with ChatGPT
+# 50 min - made learning lesson log for evening session
+# 20 min - practice for evening session
+# 30 min - joined evening session
+# 2 hour - learn more about Kubernetes
+# 1 hour - learn more about Terraform
+
+
+
+
+
+## Tomorrow's Task
+# 1 hour - practice introduction
+# 1 hour - practice english speaking
+# as much as possible - learn more about kubernetes
+# 2 hour - learn more about terraform
+# 1 hour and half min - explore Dockerfile concepts/commands
+# 1 hour - see videos about hand movement and types of hand movements
