@@ -1,0 +1,210 @@
+# update package information
+sudo apt update
+
+# install required utilities
+sudo apt install curl unzip -y
+
+# download AWS CLI v2
+curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+
+# extract the installer
+unzip awscliv2.zip
+
+# install AWS CLI
+sudo ./aws/install
+
+# verify installation
+aws --version
+
+# clean up installation files
+rm -rf aws awscliv2.zip
+aws sts get-caller-identity
+
+# install kubectl
+sudo apt install curl -y
+
+curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
+
+sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
+
+kubectl version --client
+
+# connect to EKS
+aws eks update-kubeconfig \
+  --region ap-southeast-2 \
+  --name Portfolio3_EKS
+
+# generate EKS token
+aws eks get-token --cluster-name Portfolio3_EKS --region ap-southeast-2
+
+# get IAM Role ARN
+aws iam get-role --role-name Portfolio3_IAM_Role --query "Role.Arn" --output text
+
+# check existing EKS access entries
+aws eks list-access-entries --cluster-name Portfolio3_EKS --region ap-southeast-2
+
+# verify access entry
+aws eks describe-access-entry --cluster-name Portfolio3_EKS --principal-arn arn:aws:iam::FROM_ABOVE_COMMAND --region ap-southeast-2
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+- name: deploy Nginx across multiple Kubernetes clusters
+  hosts: localhost
+  tasks:
+    - name: configure kubectl for cluster 1
+      command: kubectl --context=us-east config use-context us-east-cluster
+    - name: deploy Nginx on cluster 1
+      command: kubectl apply -f kubernetes/deployment.yaml
+    - name: configure kubectl for cluster 2
+      command: kubectl --context=us-west config use-context us-west-cluster
+    - name: deploy Nginx on cluster 2
+      command: kubectl apply -f kubernetes/deployment.yaml
+
+
+
+
+
+resource "aws_eks_cluster" "gourav_eks" {
+  name     = "gourav-eks-cluster"
+  role_arn = aws_iam_role.eks_cluster_role.arn
+
+  vpc_config {
+    subnet_ids = [aws_subnet.gourav_subnet.id]
+  }
+
+  depends_on = [aws_iam_role_policy_attachment.eks_cluster_role_policy]
+}
+
+resource "google_container_cluster" "gourav_gke" {
+  name     = "gourav-gke-cluster"
+  location = "ap-southeast-2"
+  initial_node_count = 3
+  node_config {
+    machine_type = "n1-standard-1"
+  }
+}
+
+
+
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: gourav-deployment
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: gourav-app
+  template:
+    metadata:
+      labels:
+        app: gourav-app
+    spec:
+      containers:
+        - name: nginx
+          image: nginx
+          ports:
+            - containerPort: 8000
+
+
+
+
+
+
+apiVersion: federation.k8s.io/v1beta1
+kind: FederatedDeployment
+metadata:
+  name: gourav-federated-deployment
+  namespace: default
+spec:
+  template:
+    spec:
+      replicas: 5
+      selector:
+        matchLabels:
+          app: gourav-app
+      template:
+        metadata:
+          labels:
+            app: gourav-app
+        spec:
+          containers:
+            - name: nginx
+              image: nginx
+              ports:
+                - containerPort: 8000
+
+
+
+
+
+pipeline {
+    agent any
+    stages {
+        stage('Deploy to Cluster 1') {
+            steps {
+                script {
+                    sh 'kubectl --context=us-east-cluster apply -f kubernetes/deployment.yaml'
+                }
+            }
+        }
+        stage('Deploy to Cluster 2') {
+            steps {
+                script {
+                    sh 'kubectl --context=us-west-cluster apply -f kubernetes/deployment.yaml'
+                }
+            }
+        }
+    }
+}
+
+
+
+
+
+stages:
+  - deploy
+
+deploy_cluster_1:
+  stage: deploy
+  script:
+    - kubectl --context=ap-southeast-1 apply -f kubernetes/deployment.yaml
+
+deploy_cluster_2:
+  stage: deploy
+  script:
+    - kubectl --context=ap-southeast-2 apply -f kubernetes/deployment.yaml
+
+
+
+
+
+
+
+
+
+# Compose with MySQL
+version: '3'
+services:
+  db:
+    image: mysql:8
+    container_name: gourav-db
+    environment:
+      Gourav123@: root
+  web:
+    image: nginx
+    container_name: gourav-web
