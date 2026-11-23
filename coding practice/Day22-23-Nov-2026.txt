@@ -1,0 +1,181 @@
+
+- nodepool.yaml – NodePool configuration.
+- deployment.yaml – Application deployments.
+
+# create a nodepool using nodepool.yaml
+apiVersion: karpenter.sh/v1
+kind: NodePool
+metadata:
+  name: nginx-pool
+spec:
+  template:
+    metadata:
+      labels:
+        workload: nginx
+    spec:
+      nodeClassRef:
+        group: eks.amazonaws.com
+        kind: NodeClass
+        name: default
+      requirements:
+        - key: kubernetes.io/arch
+          operator: In
+          values: ["amd64"]
+
+        - key: eks.amazonaws.com/instance-category
+          operator: In
+          values: ["m", "c"]
+
+        - key: karpenter.sh/capacity-type
+          operator: In
+          values: ["on-demand"]
+  limits:
+    cpu: "20"
+  disruption:
+    consolidationPolicy: WhenEmpty
+    consolidateAfter: 30s
+
+
+
+# deploy an Nginx application using deployment.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nginx-deployment
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: nginx
+  template:
+    metadata:
+      labels:
+        app: nginx
+    spec:
+      nodeSelector:
+        workload: nginx
+      containers:
+        - name: nginx
+          image: nginx:latest
+          ports:
+            - containerPort: 80
+          resources:
+            requests:
+              cpu: "500m"
+              memory: "512Mi"
+            limits:
+              cpu: "1"
+              memory: "1Gi"
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+- name: deploy AWS Lambda function
+  hosts: localhost
+  tasks:
+    - name: create Lambda function
+      command: aws lambda create-function --function-name gourav-lambda --runtime python3.8 --role arn:aws:iam::765456789876:role/lambda-execution-role --handler lambda_function.lambda_handler --zip-file fileb://lambda.zip
+
+
+
+
+
+
+resource "aws_api_gateway_rest_api" "gourav_api" {
+  name        = "gourav-api"
+  description = "gourav API"
+}
+
+resource "aws_lambda_function" "gourav_lambda" {
+  function_name = "gourav-lambda"
+  runtime       = "python3.8"
+  role          = aws_iam_role.lambda_exec_role.arn
+  handler       = "lambda_function.lambda_handler"
+  filename      = "lambda.zip"
+}
+
+resource "aws_api_gateway_integration" "lambda_integration" {
+  rest_api_id = aws_api_gateway_rest_api.gourav_api.id
+  resource_id = aws_api_gateway_resource.gourav_resource.id
+  http_method = aws_api_gateway_method.gourav_method.http_method
+  integration_http_method = "POST"
+  type = "AWS_PROXY"
+  uri  = aws_lambda_function.gourav_lambda.invoke_arn
+}
+
+
+
+
+
+
+
+pipeline {
+    agent any
+    stages {
+        stage('Build') {
+            steps {
+                echo 'building Lambda function...'
+                sh 'zip -r lambda.zip lambda/'
+            }
+        }
+        stage('Deploy to AWS Lambda') {
+            steps {
+                script {
+                    sh 'aws lambda update-function-code --function-name gourav-lambda --zip-file fileb://lambda.zip'
+                }
+            }
+        }
+    }
+}
+
+
+
+
+
+
+
+stages:
+  - build
+  - deploy
+
+build:
+  stage: build
+  script:
+    - zip -r lambda.zip lambda/
+
+deploy:
+  stage: deploy
+  script:
+    - aws lambda update-function-code --function-name gourav-lambda --zip-file fileb://lambda.zip
+ 
+
+
+
+
+# Stage 1 — Build Stage
+FROM maven:3.9-eclipse-temurin-17 AS builder
+WORKDIR /opt/gourav/java-build
+COPY . /opt/gourav/java-build/
+RUN mvn clean package
+
+# Stage 2 — Production Stage
+FROM tomcat:9
+WORKDIR /usr/local/tomcat/webapps
+COPY --from=builder /opt/gourav/java-build/target/*.war /usr/local/tomcat/webapps/
+EXPOSE 8080
+CMD ["catalina.sh", "run"]
+
+# Real Paths
+/opt/gourav/java-build
+/usr/local/tomcat/webapps
