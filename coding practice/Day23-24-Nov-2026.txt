@@ -1,0 +1,103 @@
+- name: deploy Docker containers with Helm
+  hosts: localhost
+  tasks:
+    - name: install Helm
+      command: curl https://raw.githubusercontent.com/helm/helm/master/scripts/get-helm-3 | bash
+    - name: deploy microservices with Helm
+      command: helm install gourav-app ./microservice-chart
+
+
+
+
+
+
+
+module "gourav_vpc" {
+  source = "./vpc"
+}
+
+module "gourav_instance" {
+  source = "./instance"
+  vpc_id = module.gourav_vpc.vpc_id
+}
+
+output "instance_id" {
+  value = module.gourav_instance.instance_id
+}
+
+
+
+
+
+
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: gourav-web-app
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: gourav-web-app
+  template:
+    metadata:
+      labels:
+        app: gourav-web-app
+    spec:
+      containers:
+        - name: nginx
+          image: nginx
+          ports:
+            - containerPort: 80
+
+
+
+
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: gourav-web-app-hpa
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: gourav-web-app
+  minReplicas: 2
+  maxReplicas: 5
+  targetCPUUtilizationPercentage: 80
+
+
+
+
+
+pipeline {
+    agent any
+    stages {
+        stage('Scale Up') {
+            steps {
+                echo 'scaling up Jenkins pipeline agents for heavy workloads...'
+            }
+        }
+        stage('Build') {
+            steps {
+                echo 'building project...'
+            }
+        }
+        stage('Deploy') {
+            steps {
+                echo 'deploying project...'
+            }
+        }
+    }
+}
+
+
+
+
+
+
+
+# Healthcheck
+FROM nginx
+HEALTHCHECK CMD curl --fail http://localhost || exit 1

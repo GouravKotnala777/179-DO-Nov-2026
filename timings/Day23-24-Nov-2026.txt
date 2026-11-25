@@ -1,0 +1,15 @@
+# What I did today
+# 1 hour 30 min - joined morning session
+# 1 hour 30 min - watched morning session video
+# 7 hours - learn and revise about Kubernetes commands/concepts, troubleshooted errors and watched previous videos
+# 30 min - introduction practice
+# 10 min - created logs from morning session video
+# 20 min - practiced for eveing session
+# 30 min - joined evening session
+
+
+
+## Tomorrow's Task
+# 1 hour - practice introduction
+# 1 hour - practice english speaking
+# as much as possible - learn more about kubernetes
