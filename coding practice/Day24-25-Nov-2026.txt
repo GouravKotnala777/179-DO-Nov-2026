@@ -1,0 +1,445 @@
+folder structure
+Terraform/
+└── pathnex-elk/
+    ├── README.md
+    ├── elk-ansible/
+    │   ├── ansible.cfg
+    │   ├── inventory.ini
+    │   ├── playbook.yaml
+    │   └── roles/
+    └── terraform/
+        ├── backend.tf
+        └── ec2.tf
+
+# Terraform > pathnex-elk > terraform
+terraform --version
+
+sudo apt-get update
+sudo apt-get install -y wget gnupg software-properties-common
+wget -O- https://apt.releases.hashicorp.com/gpg | \
+gpg --dearmor | \
+sudo tee /usr/share/keyrings/hashicorp-archive-keyring.gpg > /dev/null
+echo "deb [signed-by=/usr/share/keyrings/hashicorp-archive-keyring.gpg] https://apt.releases.hashicorp.com $(. /etc/os-release && echo "$VERSION_CODENAME") main" | \
+sudo tee /etc/apt/sources.list.d/hashicorp.list
+sudo apt-get update
+sudo apt-get install -y terraform
+
+terraform --version
+
+# ec2.tf
+provider "aws" {
+  region = "ap-southeast-2"
+}
+
+# Log segregation Node (ELK)
+resource "aws_instance" "elk" {
+  ami                    = "ami-0331e43da0c1f186e"
+  instance_type          = "c7i-flex.large"
+  count                  = 1
+  key_name               = "demo"
+  subnet_id              = "subnet-07e4740d088ab10a6"
+  vpc_security_group_ids = ["sg-059ebf97400c1963a"]
+
+  root_block_device {
+    volume_size           = 20
+    volume_type           = "gp3"
+    delete_on_termination = true
+  }
+
+  tags = {
+    Name = "elk-node"
+    Role = "elk"
+  }
+}
+
+# Client Nodes (where logs are generated)
+resource "aws_instance" "clients" {
+  ami                    = "ami-0331e43da0c1f186e"
+  instance_type          = "t3.micro"
+  count                  = 2
+  key_name               = "demo"
+  subnet_id              = "subnet-07e4740d088ab10a6"
+  vpc_security_group_ids = ["sg-059ebf97400c1963a"]
+
+  root_block_device {
+    volume_size           = 8
+    volume_type           = "gp3"
+    delete_on_termination = true
+  }
+
+  tags = {
+    Name = "client-node-${count.index}"
+    Role = "client"
+  }
+}
+
+
+# ansiblecfg
+[defaults]
+inventory = inventory.ini
+private_key_file = ../../../demo.pem
+remote_user = ubuntu
+host_key_checking = False
+retry_files_enabled = False
+timeout = 60
+
+
+
+# inventory.ini
+[elk]
+elk-server ansible_host=172.31.17.25
+
+[clients]
+client1 ansible_host=172.31.22.88
+client2 ansible_host=172.31.27.115
+
+[all:vars]
+ansible_user=ubuntu
+ansible_ssh_private_key_file=/home/ubuntu/demo.pem
+
+
+
+------------------------------------ Error -----------------------------------------------------------
+│ Error: collecting instance settings: operation error EC2: DescribeImages, https response error StatusCode: 403, RequestID: 48471688-f20d-4633-8bd5-1de84f2f4638, api error UnauthorizedOperation: You are not authorized to perform this operation. User: arn:aws:sts::877133239596:assumed-role/EC2-EKS_Role_2/i-0246654d7be209be9 is not authorized to perform: ec2:DescribeImages because no identity-based policy allows the ec2:DescribeImages action
+
+Error: collecting instance settings: operation error EC2: DescribeImages, https response error StatusCode: 403, RequestID: 2e768599-62ad-465d-b5d5-f19db45ddd6b, api error UnauthorizedOperation: You are not authorized to perform this operation. User: arn:aws:sts::877133239596:assumed-role/EC2-EKS_Role_2/i-0246654d7be209be9 is not authorized to perform: ec2:DescribeImages because no identity-based policy allows the ec2:DescribeImages action
+
+Error: collecting instance settings: operation error EC2: DescribeImages, https response error StatusCode: 403, RequestID: 580c311d-2269-4153-9257-4505f017ea8b, api error UnauthorizedOperation: You are not authorized to perform this operation. User: arn:aws:sts::877133239596:assumed-role/EC2-EKS_Role_2/i-0246654d7be209be9 is not authorized to perform: ec2:DescribeImages because no identity-based policy allows the ec2:DescribeImages action
+-------------------------------------------------------------------------------------------------------
+add inline policy to role EC2-EKS_Role_2 and give name TerraformEC2DescribePolicy
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Effect": "Allow",
+      "Action": [
+        "ec2:DescribeImages",
+        "ec2:DescribeInstances",
+        "ec2:DescribeInstanceTypes",
+        "ec2:DescribeKeyPairs",
+        "ec2:DescribeSubnets",
+        "ec2:DescribeSecurityGroups",
+        "ec2:DescribeVpcs",
+        "ec2:DescribeAvailabilityZones"
+      ],
+      "Resource": "*"
+    }
+  ]
+}
+
+======================================================================================================
+
+------------------------------------ Error -----------------------------------------------------------
+│ Error: creating EC2 Instance: operation error EC2: RunInstances, https response error StatusCode: 403, RequestID: b5868ade-c1a7-4127-97ff-dac7240585f3, api error UnauthorizedOperation: You are not authorized to perform this operation. User: arn:aws:sts::877133239596:assumed-role/EC2-EKS_Role_2/i-0246654d7be209be9 is not authorized to perform: ec2:RunInstances on resource: arn:aws:ec2:ap-southeast-2:877133239596:instance/* because no identity-based policy allows the ec2:RunInstances action. Encoded authorization failure message: zeoVDKU-Y_mD8HBZZUSTlN4nelUDKdtOBAvTWpN2WqFtRVUiXoaF7lgwdKM2ygtYAy8h2QoX5CHS6obZ9BL_zPeVHXnbHbukTFmfegV3FkaDcrTM_teTg0ABh2PaD07gI3PK4NZBf8DtjZbj-5Ot5Id0FfsZvVqF3H5Yo555NUVlfteB7KBtESO_v6Fn9qUtAu7rElCy3Vq0o8Iwtk9Y_ycjDiReWayS9XvA2pvpEfjVHeZ7jINMrC0jw3R3_TTwN0PlNKmVIMEoNQrHHy1njaPkcOjb5JKyXuyI-auveQa8bo-mNHrbOvqe6X1LQ2QeCKsh4R7pBVsjUP7Vb74FOSmkX0fW7iTghxp2Tcw7IjNs5UGdO0HvEujALzMuKjlPw25y8oXtrSEYZhG-0nPQxNnxHGc-sJMNQfpJjK5jeDx7PmwBqzhGe4DU47mhypzf9xWSt9J3SsLQByg9aYjiK3lx_rouIqQRlUkxGU51uj8n1PuhEV2N9essR-XB1Y6T0hBN9BvykxHuNbGmN9T2BQv4LaTetpGypT4D-L-7eYRBcuO3ScF3E-gD_apGeJA_Y1r2p1vAJhsu7Q3QMB-qq-NISyR_Abl6CP6wfq6asm31xjl4myBWT-5XS4dfUNPvhDFQ0XbiU9gTKFg9QG9dw7TOYOe0zBogILxBqdI_YHSTsNdiss-7YKsNCrjcc9ub21GXghmMJaAkFvVMbLK0JySOef4mI89gz7MG1f878mbF4AYdwCMjKTJYVeNlYPY9rzz1jpd2MWWT_zsAxycHI2SJUFXHrcX2sAXcxrD6g4_yRCHT0yefNqZPQCK3_Tqd2cWcC0rlVdI1Ra_tbVKC4yRFQBrdUbOBJln8xTU
+│ 
+│   with aws_instance.elk[0],
+│   on ec2.tf line 7, in resource "aws_instance" "elk":
+│    7: resource "aws_instance" "elk" {
+-------------------------------------------------------------------------------------------------------
+# give inline policy to EC2-EKS_Role_2 and add name Terraform-EC2-Permissions
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Effect": "Allow",
+      "Action": [
+        "ec2:RunInstances",
+        "ec2:CreateSecurityGroup",
+        "ec2:AuthorizeSecurityGroupIngress",
+        "ec2:AuthorizeSecurityGroupEgress",
+        "ec2:CreateTags",
+        "ec2:Describe*",
+        "ec2:CreateVolume",
+        "ec2:AttachVolume"
+      ],
+      "Resource": "*"
+    }
+  ]
+}
+
+=======================================================================================================
+terraform plan
+terraform apply
+
+------------------------------------ Error -----------------------------------------------------------
+ubuntu@ip-172-31-17-43:~$ ansible-playbook -i inventory.ini playbook.yaml
+Command 'ansible-playbook' not found, but can be installed with:
+sudo apt install ansible-core
+ubuntu@ip-172-31-17-43:~$
+------------------------------------------------------------------------------------------------------
+sudo apt update
+sudo apt install ansible-core -y
+ansible --version
+cd ~/Terraform/pathnex-elk/elk-ansible
+ansible-playbook -i inventory.ini playbook.yaml
+=======================================================================================================
+
+------------------------------------ Error -----------------------------------------------------------
+ERROR]: Task failed: Failed to connect to the host via ssh: ssh: connect to host 3.107.113.106 port 22: Connection timed out
+fatal: [elk-server]: UNREACHABLE! => {"changed": false, "msg": "Task failed: Failed to connect to the host via ssh: ssh: connect to host 3.107.113.106 port 22: Connection timed out", "unreachable": true}
+------------------------------------------------------------------------------------------------------
+nano inventory.ini
+checked ips assinged to elk-server and client servers
+check security group
+=======================================================================================================
+
+------------------------------------ Error -----------------------------------------------------------
+[WARNING]: Host 'elk-server' is using the discovered Python interpreter at '/usr/bin/python3.14', but future installation of another Python interpreter could cause a different interpreter to be discovered. See https://docs.ansible.com/ansible-core/2.20/reference_appendices/interpreter_discovery.html for more information.
+ok: [elk-server]
+
+TASK [elasticsearch : Install Elasticsearch repo dependencies] *****************************************************************************
+[ERROR]: Task failed: Action failed: ('Could not detect which major revision of dnf is in use, which is required to determine module backend.', 'You should manually specify use_backend to tell the module whether to use the dnf4 or dnf5 backend})')
+Origin: /home/ubuntu/Terraform/pathnex-elk/elk-ansible/roles/elasticsearch/tasks/main.yml:1:3
+
+1 - name: Install Elasticsearch repo dependencies
+    ^ column 3
+
+fatal: [elk-server]: FAILED! => {"ansible_facts": {"pkg_mgr": "apt"}, "changed": false, "msg": ["Could not detect which major revision of dnf is in use, which is required to determine module backend.", "You should manually specify use_backend to tell the module whether to use the dnf4 or dnf5 backend})"]}
+------------------------------------------------------------------------------------------------------
+update all files inside roles
+from Amazon Linux and Fedora to for Ubuntu
+=======================================================================================================
+
+------------------------------------ Error -----------------------------------------------------------
+[ERROR]: Task failed: Module failed: Unable to start service elasticsearch: Job for elasticsearch.service failed because of an out-of-memory (OOM) situation.
+See "systemctl status elasticsearch.service" and "journalctl -xeu elasticsearch.service" for details.
+
+Origin: /home/ubuntu/Terraform/pathnex-elk/elk-ansible/roles/elasticsearch/tasks/main.yml:85:3
+------------------------------------------------------------------------------------------------------
+change elk-server instance type from t3.micro to t3.small
+=======================================================================================================
+
+------------------------------------ Error -----------------------------------------------------------
+aws_instance.elk[0]: Modifying... [id=i-0faf3fd8ff40e4e68]
+╷
+│ Error: updating EC2 Instance (i-0faf3fd8ff40e4e68) type: stopping EC2 Instance (i-0faf3fd8ff40e4e68): operation error EC2: StopInstances, https response error StatusCode: 403, RequestID: f7aab654-c634-4449-9090-1216141bfb24, api error UnauthorizedOperation: You are not authorized to perform this operation. User: arn:aws:sts::877133239596:assumed-role/EC2-EKS_Role_2/i-0246654d7be209be9 is not authorized to perform: ec2:StopInstances on resource: arn:aws:ec2:ap-southeast-2:877133239596:instance/i-0faf3fd8ff40e4e68 because no identity-based policy allows the ec2:StopInstances action. Encoded authorization failure message: 7n-qVoZfLzbrhjncRs5QZdGVFN6vroe1NKYxzE9ejzfVNfX78EJMKSwk6xSzSFPjX1sz5ZQ0_bwu2XMaPllhtpjlaJQkt-gln_byYtqB7FSBXtj_xHYESKmdqtiw_89X7BxGQ4s5kAgUNDhRa3VU4LbhFq5znynNIBppCZ7jZQl9gYQJv1L39XWURIHxY3MqDrlr7EXM08ispLPbrgtL5tou3f_FbAb1PFPEypEpCFDj4TNP-9lBVEPXo0nNh39JpyC5O01eRazXLw2kvvHKoCjBZ8rfx-CLigkeI7CR-S9g4F2N8L5vFb4AYFQzToqkkH5N5j5I9EkKKr44R6rYHGGA8nraXP5FyJB5FF0CBkauAINp2PIIZMw3U2dXFtjcp43glUzPM6qeyAA7XHEuk6oevAL_8x_HGxGbhHvYBnCJzLhKa-W34FWYLHOPxT1SDEruMCBuCeFabQLICQsebc7_qMv_MqLUYbGhtFDQVZH7PQUBG2tWp_ylrPxOvN8bmIYOzV0rXfVhabbYcM-kW_HcvukGcE4Wa9DvA5h23l2ykl8CEFprKjBzgfpGsJb7Zc8P4iCWQfF9ho49RRauv4pxE4-ZoZXhSpiCCXVtk9BBVLBNHpdvU8urfsfd1TDnT4uHMrH-_KqMxUJUggSSSjDby3O9RAf_kkoi3_FL6oVnZHaCCAR7F83K3LY0L2ZfpgEJ9e4Utq-MHe1lWYoyxBMkW1F2I6s07OV3cZRXNzphjxmR8edAxiFsV1B-vnKjYeJa-XH4ZckHtEUXZfcPZh-SdeDE8VmRn_5jRO3Gx5QB_28ueL7r9FClczsVqPEwvEYwPqxWgA-ZKZ2hyQuaV_N930AdLMclZjEozvH8Wt1_YFTOzX_mBA6lCxqiK6gjyeMRlY9m2dH7uEOGqw
+│ 
+│   with aws_instance.elk[0],
+│   on ec2.tf line 7, in resource "aws_instance" "elk":
+│    7: resource "aws_instance" "elk" {
+│ 
+------------------------------------------------------------------------------------------------------
+add action array of EC2-EKS_Role_2 policy
+
+"Action": [
+    "ec2:RunInstances",
+    "ec2:StopInstances",
+    "ec2:StartInstances",
+    "ec2:ModifyInstanceAttribute",
+    "ec2:DescribeInstanceStatus"
+]
+=======================================================================================================
+
+------------------------------------ Error -----------------------------------------------------------
+No resources specified
+No resources are specified. Specify resources for the selected actions.
+------------------------------------------------------------------------------------------------------
+update resource array of EC2-EKS_Role_2 policy
+"Resource": "*"
+=======================================================================================================
+
+
+------------------------------------ Error -----------------------------------------------------------
+Do you want to perform these actions?
+  Terraform will perform the actions described above.
+  Only 'yes' will be accepted to approve.
+
+  Enter a value: yes
+
+aws_instance.elk[0]: Modifying... [id=i-0faf3fd8ff40e4e68]
+aws_instance.elk[0]: Still modifying... [id=i-0faf3fd8ff40e4e68, 00m10s elapsed]
+aws_instance.elk[0]: Still modifying... [id=i-0faf3fd8ff40e4e68, 00m20s elapsed]
+aws_instance.elk[0]: Still modifying... [id=i-0faf3fd8ff40e4e68, 00m30s elapsed]
+╷
+│ Error: updating EC2 Instance (i-0faf3fd8ff40e4e68) type: modifying EC2 Instance (i-0faf3fd8ff40e4e68) InstanceType (t3.medium) attribute: operation error EC2: ModifyInstanceAttribute, https response error StatusCode: 400, RequestID: e6b7cbf2-0b9c-4888-8ea1-1a706d652e6a, api error FreeTierRestrictionError: This operation is not available for free plan accounts. To perform this action, please upgrade your account plan.
+│ 
+│   with aws_instance.elk[0],
+│   on ec2.tf line 7, in resource "aws_instance" "elk":
+│    7: resource "aws_instance" "elk" {
+│ 
+╵
+ubuntu@ip-172-31-17-43:~/Terraform/pathnex-elk/terraform$
+------------------------------------------------------------------------------------------------------
+cannot give paid instance type to elk-server
+change it from t3.medium to c7i-flex.large
+=======================================================================================================
+ssh -i ~/demo.pem ubuntu@172.31.17.25 (connect to elk-server)
+curl http://localhost:9200 (working from elk-server)
+
+;client_private_ips = [
+;  "172.31.22.88",
+;  "172.31.27.115",
+;]
+;client_public_ips = [
+;  "16.176.25.191",
+;  "16.179.39.226",
+;]
+;elk_private_ip = "172.31.17.25"
+;elk_public_ip = "3.107.113.106"
+
+[  still 172.31.17.25:5601 on browser is not working  ] 
+[  still 172.31.17.25:5601 on browser is not working  ] 
+[  still 172.31.17.25:5601 on browser is not working  ] 
+[  still 172.31.17.25:5601 on browser is not working  ] 
+[  still 172.31.17.25:5601 on browser is not working  ] 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+- name: setup Prometheus node exporter
+  hosts: all
+  become: yes
+  tasks:
+    - name: install Prometheus node exporter
+      yum:
+        name: prometheus-node-exporter
+        state: present
+    - name: start Prometheus node exporter service
+      service:
+        name: prometheus-node-exporter
+        state: started
+        enabled: yes
+
+
+
+
+
+
+
+resource "aws_cloudwatch_metric_alarm" "gourav_cpu_alarm" {
+  alarm_name          = "gourav-cpu-utilization-high"
+  comparison_operator = "GreaterThanThreshold"
+  evaluation_periods  = "1"
+  metric_name         = "CPUUtilization"
+  namespace           = "AWS/EC2"
+  period              = "60"
+  statistic           = "Average"
+  threshold           = "80"
+
+  dimensions = {
+    InstanceId = aws_instance.gourav_ec2.id
+  }
+
+  alarm_actions = [aws_sns_topic.gourav_alerts.arn]
+}
+
+resource "aws_sns_topic" "gourav_alerts" {
+  name = "gourav-alerts"
+}
+
+
+
+
+
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: prometheus
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: prometheus
+  template:
+    metadata:
+      labels:
+        app: prometheus
+    spec:
+      containers:
+        - name: prometheus
+          image: prom/prometheus:latest
+          ports:
+            - containerPort: 9090
+
+
+
+
+
+
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: grafana
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: grafana
+  template:
+    metadata:
+      labels:
+        app: grafana
+    spec:
+      containers:
+        - name: grafana
+          image: grafana/grafana:latest
+          ports:
+            - containerPort: 3000
+
+
+
+
+
+
+
+pipeline {
+    agent any
+    stages {
+        stage('Monitor') {
+            steps {
+                script {
+                    echo 'triggering CloudWatch alarms if CPU exceeds 80%'
+                    sh 'aws cloudwatch put-metric-data --namespace "AWS/EC2" --metric-name "CPUUtilization" --value 90'
+                }
+            }
+        }
+        stage('Test') {
+            steps {
+                echo 'running tests...'
+            }
+        }
+    }
+}
+
+
+
+
+
+
+stages:
+  - monitor
+  - test
+
+monitor:
+  stage: monitor
+  script:
+    - aws cloudwatch put-metric-data --namespace "AWS/EC2" --metric-name "CPUUtilization" --value 90
+
+test:
+  stage: test
+  script:
+    - echo "running tests..."
+
+
+
+
+
+
+# .dockerignore file
+node_modules
+.git
+temp

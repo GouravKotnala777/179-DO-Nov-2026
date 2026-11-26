@@ -1,0 +1,16 @@
+# What I did today
+# 1 hour - joined morning session
+# 2 hour - watched morning session video
+# 7 hours - used Terraform and Ansible to create 1 elk-server and 2 worker servers, troubleshooted multiple errors
+# 30 min - introduction practice
+# 30 min - practice english speaking with ChatGPT
+# 50 min - practiced for eveing session
+# 30 min - joined evening session
+
+
+
+## Tomorrow's Task
+# 1 hour - practice introduction
+# 1 hour - practice english speaking
+# 5 hours - learn more about ELK stack
+# 4 hours - kafka
