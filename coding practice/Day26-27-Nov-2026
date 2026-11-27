@@ -1,0 +1,110 @@
+
+# Monitoring
+    Disabled - aws records analytics in every 5 minutes
+    enabled - aws records analytics in every 1 minutes
+# Platform details
+    linux/unix - this indicates the operating system platform associated with your EC2 instance
+# Allowed image
+    '-' - for '-' we can use any ami and if there is any name (ubuntu, amazon linux, ...) it will allow only those
+# Termination protection
+    disabled - we can delete instance
+    enabled - we can not delete instance
+# stop protection
+    disabled - we can stop instance
+    enabled - we can not stop instance
+# Instance auto-recovery
+    default - this configuration determines whether AWS automatically attempts to recover your EC2 instance if certain underlying hardware or system failures occur
+# Lifecycle
+    normal - for a normal On-Demand instance, it generally means the instance is operating under its regular lifecycle rather than a special lifecycle such as scheduled retirement
+# Stop-hibernate behavior
+    disabled - the operating system shuts down, RAM contents are lost, the instance can be started again later
+    enabled - AWS saves the RAM contents to the EBS root volume, the instance stops, when restarted, the operating system can resume from its previous state
+# AMI Launch index
+    This identifies the launch index of an instance within a launch request
+# State transition reason
+    '-' - This field provides information about why an EC2 instance changed its state, '-' means no state transition reason is currently recorded or displayed
+# Credit specification
+    Unlimited - allows CPU usage above the baseline even after accumulated credits are exhausted, with potential additional charges
+    Standard - uses accumulated CPU credits. CPU performance is limited when credits run out
+# State transition message
+    '-' - provides additional information about an instance's state transition, '-' means no message is currently available
+# Current instance boot mode
+    uefi - modern firmware boot method, means AWS prefers UEFI when the AMI and instance type support it, but can use legacy BIOS where applicable
+    BIOS (Legacy) - Modern firmware boot method
+
+
+
+
+
+- name: deploy serverless Lambda function
+  hosts: localhost
+  tasks:
+    - name: create Lambda function
+      command: aws lambda create-function --function-name gourav-lambda --runtime nodejs14.x --role arn:aws:iam::1238137182712012:role/lambda-role --handler index.handler --zip-file fileb://lambda.zip
+
+
+
+
+
+resource "aws_dynamodb_table" "gourav_table" {
+  name           = "gourav-table"
+  hash_key       = "id"
+  billing_mode   = "PAY_PER_REQUEST"
+  attribute {
+    name = "id"
+    type = "S"
+  }
+}
+
+
+
+
+
+
+apiVersion: kubeless.io/v1beta1
+kind: Function
+metadata:
+  name: gourav-lambda
+  namespace: default
+spec:
+  runtime: nodejs14
+  handler: index.handler
+  function: |
+    module.exports = function(event, context) {
+      context.succeed("my name is gourav");
+    };
+
+
+
+
+
+
+pipeline {
+    agent any
+    stages {
+        stage('Build') {
+            steps {
+                echo 'building Lambda function package...'
+                sh 'zip -r lambda.zip lambda/'
+            }
+        }
+        stage('deploy to Lambda') {
+            steps {
+                script {
+                    sh 'aws lambda update-function-code --function-name gourav-lambda --zip-file fileb://lambda.zip'
+                }
+            }
+        }
+    }
+}
+
+
+
+
+
+# Docker Exec & Resource Limits
+docker exec -it gourav-nginx bash
+docker stats
+
+# Bash
+docker run -d --memory="512m" --cpus="1.0" nginx
