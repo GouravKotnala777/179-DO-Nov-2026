@@ -1,0 +1,139 @@
+sudo nano /etc/kibana/kibana.yml
+# open kibana.yml and change listening ip
+# change kibana listening ip from
+server.host: "127.0.0.1"
+# to
+server.host: "0.0.0.0"
+# then it worked
+
+# from inside elk-server
+sudo systemctl status kibana
+sudo ss -tulpn | grep 5601
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+- name: implement SSH key authentication
+  hosts: all
+  become: yes
+  tasks:
+    - name: generate SSH key pair
+      command: ssh-keygen -t rsa -b 2048 -f /home/user/.ssh/id_rsa -N ""
+    - name: Add SSH public key to authorized_keys
+      authorized_key:
+        user: user
+        state: present
+        key: "{{ lookup('file', '/home/user/.ssh/id_rsa.pub') }}"
+
+
+resource "aws_vpc_flow_log" "gourav_flow_log" {
+  log_group_name = "gourav-flow-logs"
+  vpc_id         = aws_vpc.gourav_vpc.id
+  traffic_type   = "ALL"
+  log_destination_type = "cloud-watch-logs"
+}
+
+resource "aws_cloudwatch_log_group" "gourav_flow_logs_group" {
+  name = "gourav-flow-logs"
+}
+
+
+
+
+
+
+
+
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: gourav-web-policy
+spec:
+  podSelector:
+    matchLabels:
+      app: gourav-web-app
+  policyTypes:
+    - Ingress
+    - Egress
+  ingress:
+    - from:
+        - podSelector:
+            matchLabels:
+              app: gourav-api
+  egress:
+    - to:
+        - podSelector:
+            matchLabels:
+              app: gourav-database
+
+
+
+
+
+
+
+pipeline {
+    agent any
+    environment {
+        AWS_ACCESS_KEY_ID = credentials('aws-access-key')
+        AWS_SECRET_ACCESS_KEY = credentials('aws-secret-key')
+    }
+    stages {
+        stage('Build') {
+            steps {
+                echo 'building Docker image...'
+                docker.build('gourav-web-app')
+            }
+        }
+        stage('Deploy') {
+            steps {
+                echo 'deploying to AWS EC2...'
+                sh 'aws ec2 run-instances --image-id ami-0wedasi9abcd1234 --count 1 --instance-type t2.micro'
+            }
+        }
+    }
+}
+
+
+
+
+
+
+
+
+stages:
+  - build
+  - deploy
+
+build:
+  stage: build
+  script:
+    - docker build -t gourav-web-app .
+
+deploy:
+  stage: deploy
+  script:
+    - echo "Deploying with secure credentials"
+    - aws ec2 run-instances --image-id ami-0wedasi9abcd1234 --count 1 --instance-type t2.micro --access-key $AWS_ACCESS_KEY --secret-key $AWS_SECRET_KEY
+
+
+
+
+
+
+# Docker Logs & Inspect
+docker logs gourav-nginx
+docker inspect gourav-nginx
