@@ -1,0 +1,21 @@
+# What I did today
+# 1 hour 20 min - joined morning session
+# 50 min - watched morning session video
+# 1 hour 40 min - learned about SSL and TLS, learned pdf
+# 3 hours - explored details tab of single EC2 instance page
+# 3 hours - connected EC2 and EKS and troubleshooted multiple errors
+# 1 hour - created deployment, pods, services using both ways, rollout deployent, updated pod image
+# 1 hour - explored main.yml of Elastic Search & Logstash & Kibana
+# 20 min - introduction practice
+# 50 min - practice english speaking with ChatGPT
+# 30 min - practiced for eveing session
+# 30 min - joined evening session
+
+
+
+## Tomorrow's Task
+# 1 hour - practice introduction
+# 1 hour - practice english speaking
+# 2 hour - kubernetes
+# 1 hour - terraform
+# as much as - learn kafka (pending from 26-11-26)
