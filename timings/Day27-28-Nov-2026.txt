@@ -1,0 +1,18 @@
+# What I did today
+# 1 hour - joined morning session
+# 4 hour - Kafka
+# 3 hours - kubernetes
+# 1 hours - terraform
+# 30 min - introduction practice
+# 1 hour - practice english speaking with ChatGPT
+# 30 min - practiced for eveing session
+# 30 min - joined evening session
+
+
+
+## Tomorrow's Task
+# 2 hour - practice introduction according to DevSecOps
+# 2 hour - practice english speaking with ChatGPT
+# 2 hour - kubernetes
+# 1 hour - terraform
+# 1 hour - GCP
