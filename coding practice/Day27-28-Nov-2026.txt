@@ -1,0 +1,54 @@
+- name: setup VPC peering between accounts
+  hosts: localhost
+  tasks:
+    - name: create VPC peering connection
+      command: aws ec2 create-vpc-peering-connection --vpc-id vpc-1234567890 --peer-vpc-id vpc-0987654321
+
+
+
+
+
+
+
+resource "aws_vpc_peering_connection" "gourav_peering" {
+  vpc_id      = aws_vpc.gourav_vpc.id
+  peer_vpc_id = aws_vpc.peer_vpc.id
+}
+
+resource "aws_route" "gourav_route" {
+  route_table_id         = aws_route_table.gourav_rt.id
+  destination_cidr_block = "10.0.0.0/16"
+  vpc_peering_connection_id = aws_vpc_peering_connection.gourav_peering.id
+}
+
+
+
+
+
+
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: gourav-vpc-policy
+spec:
+  podSelector:
+    matchLabels:
+      app: gourav-app
+  ingress:
+    - from:
+        - podSelector:
+            matchLabels:
+              app: gourav-db
+
+
+
+
+
+
+# Docker Save, Load & Backup
+docker save -o gourav-nginx.tar gourav-nginx
+
+docker load -i gourav-nginx.tar
+
+# Bash
+docker run --rm -v gourav-volume:/data -v $(pwd):/backup ubuntu tar czf /backup gourav-backup.tar.gz /data
